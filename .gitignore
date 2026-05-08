@@ -1,0 +1,41 @@
+# Build artifacts
+build/
+build-*/
+out/
+cmake-build-*/
+_deps/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+.cache/
+.vs/
+
+# Coverage
+*.gcno
+*.gcda
+*.gcov
+coverage.info
+coverage_html/
+
+# Benchmark results
+bench_results/
+*.json.bench

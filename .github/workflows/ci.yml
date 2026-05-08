@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [default, clang]
+        exclude:
+          - os: macos-latest
+            compiler: clang  # macOS already uses Apple clang as default
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux clang
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
+        run: sudo apt-get update && sudo apt-get install -y clang-18
+
+      - name: Configure (gcc)
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'default'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Configure (clang on Linux)
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+             -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18
+
+      - name: Configure (macOS)
+        if: matrix.os == 'macos-latest'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Run example
+        run: ./build/examples/simple
