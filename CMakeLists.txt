@@ -17,6 +17,7 @@ endif()
 option(LOBSTER_BUILD_TESTS "Build unit tests" ON)
 option(LOBSTER_BUILD_BENCHMARKS "Build benchmarks" ON)
 option(LOBSTER_BUILD_EXAMPLES "Build examples" ON)
+option(LOBSTER_BUILD_PYTHON "Build the pybind11 Python bindings" OFF)
 option(LOBSTER_WARNINGS_AS_ERRORS "Treat warnings as errors" ON)
 
 # Header-only interface library — the matching engine itself is templated /
@@ -53,4 +54,8 @@ endif()
 
 if(LOBSTER_BUILD_EXAMPLES)
     add_subdirectory(examples)
+endif()
+
+if(LOBSTER_BUILD_PYTHON)
+    add_subdirectory(python)
 endif()

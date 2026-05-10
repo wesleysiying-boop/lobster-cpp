@@ -113,15 +113,32 @@ Work in progress, built incrementally. Roadmap reflects reality.
 - [x] SPSC lock-free queue
 - [x] Catch2 unit tests covering match priority, partial fills, cancel races
 - [x] Google Benchmark suite — `add_aggressive_match`, `cancel`, `add_resting`
+- [x] pybind11 Python bindings (`pip install -e .` from the repo root) — see `python/`
 - [ ] FOK (fill-or-kill) and STP (self-trade prevention) order types
 - [ ] Pegged orders (peg to best bid / ask)
-- [ ] pybind11 Python bindings → use as a venue inside `quantforge`
+- [ ] L2-driven `LobsterBroker` adapter inside `quantforge`
 - [ ] L2 snapshot + delta replay for offline analysis
 - [ ] Lock-free MPSC queue variant for multi-feed input
 
 ### Companion projects
 
 - [`quantforge`](https://github.com/wesleysiying-boop/quantforge) — Python event-driven backtester. `lobster-cpp` is intended to slot in as a higher-fidelity broker.
+
+### Python bindings
+
+```bash
+pip install -e .                       # builds the pybind11 module via scikit-build-core
+python python/example.py               # same scenario as examples/simple.cpp, in Python
+pytest -q python/test_bindings.py
+```
+
+```python
+import lobster_py as lob
+eng = lob.MatchingEngine()
+eng.add(lob.OrderRequest(id=1, side=lob.Side.Buy, price=5000, quantity=100))
+fills = eng.add(lob.OrderRequest(id=2, side=lob.Side.Sell, price=5000, quantity=30))
+# fills[0].aggressor_id == 2, fills[0].quantity == 30
+```
 
 ---
 

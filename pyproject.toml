@@ -1,0 +1,36 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.13"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "lobster-py"
+version = "0.1.0"
+description = "Python bindings for the lobster matching engine — a sub-microsecond C++20 limit order book"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Wesley Si Ying" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: C++",
+]
+
+[project.urls]
+Homepage = "https://github.com/wesleysiying-boop/lobster-cpp"
+Issues = "https://github.com/wesleysiying-boop/lobster-cpp/issues"
+
+[tool.scikit-build]
+# Configure the CMake build with only the Python target enabled — skip
+# tests / benchmarks / examples to keep `pip install` fast.
+cmake.build-type = "Release"
+cmake.args = [
+    "-DLOBSTER_BUILD_TESTS=OFF",
+    "-DLOBSTER_BUILD_BENCHMARKS=OFF",
+    "-DLOBSTER_BUILD_EXAMPLES=OFF",
+    "-DLOBSTER_BUILD_PYTHON=ON",
+]
+wheel.packages = []

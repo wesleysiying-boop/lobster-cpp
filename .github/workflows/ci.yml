@@ -50,3 +50,25 @@ jobs:
 
       - name: Run example
         run: ./build/examples/simple
+
+  python-bindings:
+    name: Python bindings (pybind11)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install build deps
+        run: python -m pip install pip pytest scikit-build-core pybind11 cmake ninja
+      - name: Build & install lobster_py
+        run: python -m pip install -v .
+      - name: Run binding tests
+        run: pytest -q python/test_bindings.py
+      - name: Run Python example
+        run: python python/example.py
